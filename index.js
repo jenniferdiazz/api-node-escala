@@ -54,12 +54,17 @@ const admin = require('./routes/admin')
 //midlewares es una funcion que se ejecuta antes de devolver en este caso o un mensaje, puede ser una validacion para que no se ejecute el archivo
 app.use('/api/user', authRoutes)
 app.use('/api/admin', validaToken, admin)
-app.get('/', (req, res) => {
-    res.json({
-        estado: true,
-        mensaje: 'funciona!'
-    })
-});
+// app.get('/', (req, res) => {
+//     res.json({
+//         estado: true,
+//         mensaje: 'funciona!'
+//     })
+// });
+
+// Middleware para Vue.js router modo history
+const history = require('connect-history-api-fallback');
+app.use(history());
+app.use(express.static(__dirname + "/public"));
 
 // iniciar server
 const PORT = process.env.PORT || 3001;

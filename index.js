@@ -18,12 +18,32 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
 // Conexión a Base de datos
-const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.1y8z3.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
-mongoose.connect(uri,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-)
-.then(() => console.log('Base de datos conectada'))
-.catch(e => console.log('error db:', e))
+// const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.1y8z3.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
+// mongoose.connect(uri,
+//     { useNewUrlParser: true, useUnifiedTopology: true }
+// )
+// .then(() => console.log('Base de datos conectada'))
+// .catch(e => console.log('error db:', e))
+
+//modern connection
+const db = async()=>{
+    try{
+        const success=await mongoose.connect(process.env.DATABASE, {
+            useNewUrlParser: true,
+            useUnifiedTopology:true,
+            useCreateIndex:true,
+            //se utilizan todod los metodos de cosulta nativos
+            useFindAndModify:false,
+        });
+        console.log('DB connected');
+    }
+    catch(error){
+        console.log('DB Connection Error', error);
+
+    }
+}
+//execute db connection
+db(); 
 
 // import routes
 const authRoutes = require('./routes/auth')

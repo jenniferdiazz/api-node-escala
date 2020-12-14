@@ -17,38 +17,39 @@ app.use(cors(corsOptions));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-// Conexión a Base de datos
-// const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.1y8z3.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
-// mongoose.connect(uri,
-//     { useNewUrlParser: true, useUnifiedTopology: true }
-// )
-// .then(() => console.log('Base de datos conectada'))
-// .catch(e => console.log('error db:', e))
+//Conexión a Base de datos
+const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.1y8z3.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
+mongoose.connect(uri,
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true, useFindAndModify:false, }
+)
+.then(() => console.log('Base de datos conectada'))
+.catch(e => console.log('error db:', e))
 
 //modern connection
-const db = async()=>{
-    try{
-        const success=await mongoose.connect(process.env.DATABASE, {
-            useNewUrlParser: true,
-            useUnifiedTopology:true,
-            useCreateIndex:true,
-            //se utilizan todod los metodos de cosulta nativos
-            useFindAndModify:false,
-        });
-        console.log('DB connected');
-    }
-    catch(error){
-        console.log('DB Connection Error', error);
+// const db = async()=>{
+//     try{
+//         const success=await mongoose.connect(process.env.DATABASE, {
+//             useNewUrlParser: true,
+//             useUnifiedTopology:true,
+//             useCreateIndex:true,
+//             //se utilizan todod los metodos de cosulta nativos
+//             useFindAndModify:false,
+//         });
+//         console.log('DB connected');
+//     }
+//     catch(error){
+//         console.log('DB Connection Error', error);
 
-    }
-}
-//execute db connection
-db(); 
+//     }
+// }
+// //execute db connection
+// db(); 
 
 // import routes
 const authRoutes = require('./routes/auth')
 const validaToken = require('./routes/validate-token');
-const admin = require('./routes/admin')
+const admin = require('./routes/admin');
+const notanueva = require('./routes/nota');
 
 // route middlewares
 //midlewares es una funcion que se ejecuta antes de devolver en este caso o un mensaje, puede ser una validacion para que no se ejecute el archivo
@@ -60,7 +61,7 @@ app.use('/api/admin', validaToken, admin)
 //         mensaje: 'funciona!'
 //     })
 // });
-
+app.use('/api', notanueva);
 // Middleware para Vue.js router modo history
 const history = require('connect-history-api-fallback');
 app.use(history());
